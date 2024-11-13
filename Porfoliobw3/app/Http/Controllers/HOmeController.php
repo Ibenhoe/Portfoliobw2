@@ -9,7 +9,7 @@ class HOmeController extends Controller
 {
     public function index()
     {
-        $newsItems = News::orderBy('created_at', 'desc')->take(5)->get();
+        $newsItems = News::with('comments.user')->orderBy('created_at', 'desc')->take(5)->get();
 
         // Retourneer de view met de nieuwsitems
         return view('home.index', compact('newsItems'));

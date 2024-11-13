@@ -182,6 +182,25 @@
                         <a href="#" onclick="showNewsContent('{{ $news->content }}')">{{ $news->title }}
                             <br><span>{{ Str::limit($news->content, 150) }}</span>
                         </a>
+                            <div class="comments-section">
+                            <h5>Reacties:</h5>
+                            @foreach($news->comments as $comment)
+                                <div class="comment">
+                                    <strong>{{ $comment->user->name }}:{{Str::limit($comment->comment, 150)  }}</strong>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <!-- Reactieformulier -->
+                        @auth
+                            <form action="{{ route('comments.store', $news->id) }}" method="POST">
+                                @csrf
+                                <textarea name="content" required placeholder="Schrijf een reactie..."></textarea>
+                                <button type="submit">Reageer</button>
+                            </form>
+                        @else
+                            <p>Log in om te reageren!</p>
+                        @endauth
                     </li>
                 @endforeach
             </ul>

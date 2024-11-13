@@ -7,6 +7,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\CommentController;
 
+
+
 Route::get('/', function () {
     return view('home.index');
 });
@@ -28,7 +30,8 @@ Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 Route::resource('news', NewsController::class);
 
 // Reacties toevoegen
-Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::post('/news/{news}/comments',[CommentController::class, 'store'])->name('comments.store');
 Route::get('/', [NewsController::class, 'index'])->name('home');
+
 
 require __DIR__.'/auth.php';

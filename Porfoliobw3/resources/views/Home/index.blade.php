@@ -9,8 +9,6 @@
         body {
             font-family: Arial, sans-serif;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             margin: 0;
             padding: 0;
             background-color: #f0f0f0;
@@ -25,6 +23,9 @@
             justify-content: space-between;
             padding: 10px 20px;
             box-sizing: border-box;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
         }
 
         .navbar .nav-links {
@@ -83,10 +84,54 @@
             color: #555;
         }
 
-        /* Cookie clicker layout */
+        /* Layout */
+        .container {
+            display: flex;
+            width: 100%;
+            margin-top: 70px; /* ruimte voor de navbar */
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 250px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .news-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .news-list li {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .news-list li a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .news-list li a:hover {
+            color: #555;
+        }
+
+        /* Cookie clicker content styling */
         .content {
             text-align: center;
-            margin-top: 50px;
+            flex: 1;
+            padding: 20px;
         }
 
         .cookie {
@@ -108,15 +153,14 @@
             <a href="#home">Home</a>
             <a href="#faq">FAQ</a>
             <a href="{{ route('messages.index') }}">Message</a>
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Log in</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Register</a>
-                        @endif
-                    @endauth
+            @auth
+                <a href="{{ url('/dashboard') }}">Dashboard</a>
+            @else
+                <a href="{{ route('login') }}">Log in</a>
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}">Register</a>
+                @endif
+            @endauth
         </div>
 
         <div class="profile">
@@ -127,10 +171,27 @@
         </div>
     </div>
 
-    <!-- Cookie Clicker Content -->
-    <div class="content">
-        <img src="{{ asset('images/cookie.png') }}" alt="Koek" class="cookie" id="cookie" />
-        <div class="counter">Klikken: <span id="clickCount">0</span></div>
+    <!-- Container voor sidebar en content -->
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Nieuwste Berichten</h2>
+            <ul class="news-list">
+            @foreach($newsItems as $news)
+                    <li>
+                        <a href="#" onclick="showNewsContent('{{ $news->content }}')">{{ $news->title }}
+                            <br><span>{{ Str::limit($news->content, 150) }}</span>
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+
+        <!-- Cookie Clicker Content -->
+        <div class="content">
+            <img src="{{ asset('images/cookie.png') }}" alt="Koek" class="cookie" id="cookie" />
+            <div class="counter">Klikken: <span id="clickCount">0</span></div>
+        </div>
     </div>
 
     <!-- JavaScript -->

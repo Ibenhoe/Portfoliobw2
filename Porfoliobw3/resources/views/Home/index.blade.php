@@ -208,20 +208,46 @@
 
         <!-- Cookie Clicker Content -->
         <div class="content">
+            <form id="clickForm" action="{{ route('clicks.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="clicks" id="clickInput" value="0">
+            </form>
             <img src="{{ asset('images/cookie.png') }}" alt="Koek" class="cookie" id="cookie" />
-            <div class="counter">Klikken: <span id="clickCount">0</span></div>
+            <div class="counter">Klikken: <span id="clickCount">{{$userClicks}}</span></div>
         </div>
     </div>
 
     <!-- JavaScript -->
     <script>
-        let clickCount = 0;
+        let clickCount = {{ $userClicks }};  // Haal de waarde van de server (of sessie)
 
-        // Verhoog de klik-teller bij een klik op de koek
-        document.getElementById("cookie").addEventListener("click", () => {
-            clickCount++;
-            document.getElementById("clickCount").innerText = clickCount;
-        });
+// Check of we een sessie in de browser hebben voor klikken (voor niet-ingelogde gebruikers)
+if (typeof(Storage) !== "undefined") {
+    // Als het aantal klikken in sessionStorage is opgeslagen
+    if (sessionStorage.getItem('clicks')) {
+        clickCount = parseInt(sessionStorage.getItem('clicks'));
+    }
+}
+
+// Verhoog de klik-teller bij een klik op de koek
+document.getElementById("cookie").addEventListener("click", () => {
+    // Verhoog het aantal klikken
+    clickCount++;
+
+    // Update de teller op de pagina
+    document.getElementById("clickCount").innerText = clickCount;
+
+    // Als de gebruiker niet is ingelogd, sla de klikken op in de sessie
+    if (!{{ Auth::check() ? 'true' : 'false' }}) {
+        sessionStorage.setItem('clicks', clickCount);
+    }
+
+    // Als de gebruiker wel is ingelogd, stuur dan het formulier via JavaScript
+    if ({{ Auth::check() ? 'true' : 'false' }}) {
+        document.getElementById("clickInput").value = clickCount;
+        document.getElementById("clickForm").submit();
+    }
+});
     </script>
 </body>
 </html>

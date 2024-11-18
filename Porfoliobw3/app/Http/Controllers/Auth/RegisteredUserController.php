@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Models\Click;
 
 class RegisteredUserController extends Controller
 {
@@ -40,6 +41,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        Click::create(['user_id' => $user->id, 'click_count' => 0]);
 
         event(new Registered($user));
 

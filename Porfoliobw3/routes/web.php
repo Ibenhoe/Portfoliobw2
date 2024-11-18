@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ClickController;
 
 
 
@@ -32,6 +33,7 @@ Route::resource('news', NewsController::class);
 // Reacties toevoegen
 Route::post('/news/{news}/comments',[CommentController::class, 'store'])->name('comments.store');
 Route::get('/', [NewsController::class, 'index'])->name('home');
-
+Route::post('/api/click', [ClickController::class, 'store'])->middleware('auth');
+Route::post('/clicks', [ClickController::class, 'store'])->name('clicks.store');
 
 require __DIR__.'/auth.php';

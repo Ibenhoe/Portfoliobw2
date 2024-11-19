@@ -44,18 +44,18 @@
             background-color: #555;
         }
 
-        /* Profielafbeelding en dropdown */
+        
         .profile {
             position: relative;
             display: flex;
             align-items: center;
+            cursor: pointer;
         }
 
         .profile img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            cursor: pointer;
         }
 
         .dropdown {
@@ -67,10 +67,8 @@
             border: 1px solid #ddd;
             padding: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .profile:hover .dropdown {
-            display: block;
+            z-index: 100;
+            min-width: 150px;
         }
 
         .dropdown a {
@@ -78,11 +76,17 @@
             color: #333;
             text-decoration: none;
             padding: 5px 0;
+            font-size: 14px;
         }
 
         .dropdown a:hover {
-            color: #555;
+            background-color: #f0f0f0;
         }
+
+        .profile.active .dropdown {
+            display: block;
+        }
+
 
         /* Layout */
         .container {
@@ -163,7 +167,7 @@
             @endauth
         </div>
 
-        <div class="profile">
+        <div class="profile" id="profileDropdown">
             <img src="https://via.placeholder.com/40" alt="Profiel Foto" />
             <div class="dropdown">
                 <a href="#profile">Bekijk Profiel</a>
@@ -219,35 +223,54 @@
 
     <!-- JavaScript -->
     <script>
-        let clickCount = {{ $userClicks }};  // Haal de waarde van de server (of sessie)
+        document.addEventListener("DOMContentLoaded", () => {
+            // Haal de klikwaarde van de server op of gebruik sessionStorage voor niet-ingelogde gebruikers
+            let clickCount = {{ $userClicks }}; // Serverwaarde voor ingelogde gebruikers
 
-// Check of we een sessie in de browser hebben voor klikken (voor niet-ingelogde gebruikers)
-if (typeof(Storage) !== "undefined") {
-    // Als het aantal klikken in sessionStorage is opgeslagen
-    if (sessionStorage.getItem('clicks')) {
-        clickCount = parseInt(sessionStorage.getItem('clicks'));
-    }
-}
+            const isLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
+            const cookie = document.getElementById("cookie");
+            const clickCountElement = document.getElementById("clickCount");
+            const clickForm = document.getElementById("clickForm");
+            const clickInput = document.getElementById("clickInput");
 
-// Verhoog de klik-teller bij een klik op de koek
-document.getElementById("cookie").addEventListener("click", () => {
-    // Verhoog het aantal klikken
-    clickCount++;
+            // Reset sessionStorage als de gebruiker is ingelogd
+            if (isLoggedIn) {
+                sessionStorage.removeItem('clicks');
+            } else if (typeof Storage !== "undefined" && sessionStorage.getItem('clicks')) {
+                // Gebruik de opgeslagen waarde uit sessionStorage voor niet-ingelogde gebruikers
+                clickCount = parseInt(sessionStorage.getItem('clicks'));
+                clickCountElement.innerText = clickCount; // Update de UI met sessionStorage waarde
+            }
 
-    // Update de teller op de pagina
-    document.getElementById("clickCount").innerText = clickCount;
+            // Klik-event listener
+            cookie.addEventListener("click", () => {
+                clickCount++; // Verhoog het aantal klikken
 
-    // Als de gebruiker niet is ingelogd, sla de klikken op in de sessie
-    if (!{{ Auth::check() ? 'true' : 'false' }}) {
-        sessionStorage.setItem('clicks', clickCount);
-    }
+                // Update de UI
+                clickCountElement.innerText = clickCount;
 
-    // Als de gebruiker wel is ingelogd, stuur dan het formulier via JavaScript
-    if ({{ Auth::check() ? 'true' : 'false' }}) {
-        document.getElementById("clickInput").value = clickCount;
-        document.getElementById("clickForm").submit();
-    }
-});
+                if (isLoggedIn) {
+                    // Synchroniseer klikken naar de server
+                    clickInput.value = clickCount;
+                    clickForm.submit();
+                } else if (typeof Storage !== "undefined") {
+                    // Sla klikken lokaal op in sessionStorage voor niet-ingelogde gebruikers
+                    sessionStorage.setItem('clicks', clickCount);
+                }
+            });
+
+            // Profiel dropdown functionaliteit
+            const profile = document.getElementById("profileDropdown");
+            profile.addEventListener("click", (e) => {
+                e.stopPropagation(); // Voorkom dat andere clicks het sluiten
+                profile.classList.toggle("active");
+            });
+
+            // Sluit het menu als ergens anders wordt geklikt
+            document.addEventListener("click", () => {
+                profile.classList.remove("active");
+            });
+        });
     </script>
 </body>
 </html>

@@ -20,13 +20,13 @@ class ProfileController extends Controller
 {
     public function show(User $user)
     {
-        return view('profile.show', compact('user'));
+        return view('home.profielpagina', compact('user'));
     }
 
     public function edit()
     {
         $user = auth()->user();
-        return view('profile.edit', compact('user'));
+        return view('home.profielpagina', compact('user'));
     }
 
     public function update(Request $request)
@@ -52,6 +52,6 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return redirect()->route('profile.show', $user)->with('success', 'Profile updated successfully.');
+        return redirect()->route('home.profielpagina', $user)->with('success', 'Profile updated successfully.');
     }
 }

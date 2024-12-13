@@ -147,7 +147,7 @@
     <!-- Navbar -->
     <div class="navbar">
         <div class="nav-links">
-            <a href="#home">Home</a>
+            <a href="{{url('/home')}}">Home</a>
             <a href="#faq">FAQ</a>
             <a href="{{ route('messages.index') }}">Message</a>
             @auth
@@ -163,7 +163,7 @@
         <div class="profile" id="profileDropdown">
             <img src="https://via.placeholder.com/40" alt="Profiel Foto" />
             <div class="dropdown">
-                <a href="#profile">Bekijk Profiel</a>
+                <a href="{{url('/profielpagina?')}}">Bekijk Profiel</a>
             </div>
         </div>
     </div>

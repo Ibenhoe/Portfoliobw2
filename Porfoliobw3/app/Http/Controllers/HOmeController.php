@@ -2,31 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\News;
-use App\Models\Click;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\FAQ;
+use App\Models\Click;
 
-class HOmeController extends Controller
+
+class HomeController extends Controller
 {
     public function index()
     {
-        $newsItems = News::with('comments.user')->orderBy('created_at', 'desc')->take(5)->get();
-        
+        $newsItems = News::with('comments.user')->orderBy('published_at', 'desc')->get();
 
-        // Controleer of de gebruiker is ingelogd
-        
         $userClicks = 0;
 
-    // Controleer of de gebruiker is ingelogd
         if (Auth::check()) {
-            $user = Auth::user();
-            
-            // Gebruik de relatie om het aantal klikken van de gebruiker op te halen
-            $userClicks = $user->clicks->click_count ?? 0; // Als geen record, gebruik 0
+        $user = Auth::user();
+        $userClicks = $user->clicks()->sum('click_count') ?? 0;
         }
+            $faqs = FAQ::all();
 
-        // Retourneer de view met de nieuwsitems
-        return view('home.index', compact('newsItems', 'userClicks'));
+
+        return view('home.index', compact('newsItems', 'userClicks', 'faqs'));
     }
 }

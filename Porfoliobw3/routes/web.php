@@ -4,15 +4,18 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\NewsController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ClickController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\NewsController;
+use App\Http\Controllers\Admin\FAQController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Middleware\AdminMiddleware;
 
-
-
-Route::get('/', function () {
-    return view('home.index');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -26,14 +29,19 @@ Route::middleware('auth')->group(function () {
 Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
 Route::post('/messages/send', [MessageController::class, 'send'])->name('messages.send');
 
-Route::get('/home', [HomeController::class, 'index'])->name('home.index');
-
-Route::resource('news', NewsController::class);
-
 // Reacties toevoegen
 Route::post('/news/{news}/comments',[CommentController::class, 'store'])->name('comments.store');
-Route::get('/', [NewsController::class, 'index'])->name('home');
 Route::post('/api/click', [ClickController::class, 'store'])->middleware('auth');
 Route::post('/clicks', [ClickController::class, 'store'])->name('clicks.store');
+
+
+Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::resource('/users', UserController::class);
+    Route::resource('/news', NewsController::class);
+    Route::resource('/faq', FAQController::class);
+    Route::resource('/categories', CategoryController::class);
+    Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+});
 
 require __DIR__.'/auth.php';

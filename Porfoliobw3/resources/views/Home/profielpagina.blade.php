@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profiel Bewerken</title>
-    <style>
+   <style>
         /* Algemene styling */
         body {
             font-family: Arial, sans-serif;
@@ -52,7 +52,7 @@
             color: #555;
         }
 
-        .form-group input, 
+        .form-group input,
         .form-group textarea {
             width: 100%;
             padding: 10px;
@@ -63,7 +63,7 @@
             box-sizing: border-box;
         }
 
-        .form-group input:focus, 
+        .form-group input:focus,
         .form-group textarea:focus {
             border-color: #007bff;
             outline: none;
@@ -113,60 +113,11 @@
                 padding: 8px 15px;
             }
         }
-        .navbar {
-            width: 100%;
-            background-color: #333;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 20px;
-            box-sizing: border-box;
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-        }
 
-        .navbar .nav-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .navbar .nav-links a {
-            color: white;
-            text-decoration: none;
-            padding: 8px;
-            transition: background-color 0.3s;
-        }
-
-        .navbar .nav-links a:hover {
-            background-color: #555;
-        }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <div class="navbar">
-        <div class="nav-links">
-            <a href="{{url('/home')}}">Home</a>
-            <a href="#faq">FAQ</a>
-            <a href="{{ route('messages.index') }}">Message</a>
-            @auth
-                <a href="{{ url('/dashboard') }}">Dashboard</a>
-            @else
-                <a href="{{ route('login') }}">Log in</a>
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}">Register</a>
-                @endif
-            @endauth
-        </div>
-
-        <div class="profile" id="profileDropdown">
-            <img src="https://via.placeholder.com/40" alt="Profiel Foto" />
-            <div class="dropdown">
-                <a href="{{url('/profielpagina?')}}">Bekijk Profiel</a>
-            </div>
-        </div>
-    </div>
+   <x-navbar />
 
     <!-- Profielpagina -->
     <div class="profile-container">
@@ -178,20 +129,21 @@
 
         <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @method('PATCH')
 
             <div class="form-group">
-                <label for="username">Gebruikersnaam</label>
-                <input type="text" id="username" name="username" value="{{ old('username', $user->username) }}">
+                <label for="name">Gebruikersnaam</label>
+                <input type="text" id="name" name="name" value="{{ $user->name }}">
             </div>
 
             <div class="form-group">
                 <label for="birthday">Verjaardag</label>
-                <input type="date" id="birthday" name="birthday" value="{{ old('birthday', $user->birthday) }}">
+                <input type="date" id="birthday" name="birthday" value="{{ $user->birthday }}">
             </div>
 
             <div class="form-group">
                 <label for="about_me">Over mij</label>
-                <textarea id="about_me" name="about_me">{{ old('about_me', $user->about_me) }}</textarea>
+                <textarea id="about_me" name="about_me">{{ $user->about_me }}</textarea>
             </div>
 
             <div class="form-group">
@@ -199,7 +151,9 @@
                 <input type="file" id="profile_picture" name="profile_picture">
                 @if ($user->profile_picture)
                     <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profielfoto">
-                @endif
+                 @else
+                    <p>Geen profielfoto</p>
+                 @endif
             </div>
 
             <button type="submit" class="btn btn-primary">Opslaan</button>
@@ -207,4 +161,3 @@
     </div>
 </body>
 </html>
-

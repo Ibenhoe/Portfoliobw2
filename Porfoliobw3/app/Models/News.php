@@ -11,6 +11,7 @@ class News extends Model
     use HasFactory;
 
     protected $fillable = ['title', 'content', 'image', 'published_at'];
+    protected $table = 'news';
 
     public function comments()
     {

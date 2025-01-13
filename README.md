@@ -1,4 +1,4 @@
-# Sportclub Website
+# Cookie Clicker
 
 Deze website is een project gemaakt met Laravel 11, en bevat alle functionele eisen, en een aantal extra eisen zoals beschreven in de project beschrijving.
 

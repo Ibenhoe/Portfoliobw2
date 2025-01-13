@@ -42,6 +42,8 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admi
     Route::resource('/faq', FAQController::class);
     Route::resource('/categories', CategoryController::class);
     Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+    Route::get('/contacts/{contact}/reply', [ContactController::class, 'reply'])->name('contacts.reply');
+    Route::post('/contacts/{contact}/send-reply', [ContactController::class, 'sendReply'])->name('contacts.sendReply');
 });
 
 require __DIR__.'/auth.php';

@@ -3,25 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Contact;
+use App\Mail\ContactFormMail;
+use Illuminate\Support\Facades\Mail;
 
 class MessageController extends Controller
 {
     public function index()
     {
-        // Hier kun je later berichten ophalen uit de database
         return view('home.message');
     }
 
-    // Verwerk het verzenden van een bericht
     public function send(Request $request)
     {
-        // Validatie en opslag van het bericht
-        $request->validate([
-            'message' => 'required|string|max:255',
+         $request->validate([
+            'message' => 'required|string|max:1000',
         ]);
 
-        // Hier kun je de code toevoegen om het bericht op te slaan in de database
-
-        return redirect()->route('messages.index')->with('status', 'Bericht verzonden!');
+        $contact = Contact::create([
+           'name' => auth()->check() ? auth()->user()->name : 'Guest',
+            'email' => auth()->check() ? auth()->user()->email : 'No email',
+           'message' => $request->message
+       ]);
+         Mail::to('admin@example.com')->send(new ContactFormMail($contact));
+        return redirect()->route('home')->with('success', 'Bericht verzonden!');
     }
 }

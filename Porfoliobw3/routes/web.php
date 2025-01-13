@@ -25,10 +25,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profielpagina', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
 });
 Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
 Route::post('/messages/send', [MessageController::class, 'send'])->name('messages.send');
-
+Route::get('/profielpagina/{user}', [ProfileController::class, 'show'])->name('profile.show');
 // Reacties toevoegen
 Route::post('/news/{news}/comments',[CommentController::class, 'store'])->name('comments.store');
 Route::post('/api/click', [ClickController::class, 'store'])->middleware('auth');

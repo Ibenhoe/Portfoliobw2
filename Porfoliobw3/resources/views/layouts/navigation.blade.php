@@ -18,8 +18,8 @@
             <div class="hidden sm:flex sm:items-center">
                 @auth
                     <div class="shrink-0 flex items-center space-x-4">
-                        <a href="{{ route('dashboard') }}" class="text-gray-800 dark:text-gray-200 hover:underline">
-                            Dashboard
+                        <a href="{{url('/profielpagina') }}" class="text-gray-800 dark:text-gray-200 hover:underline">
+                            Profiel
                         </a>
                         <form method="POST" action="{{ route('logout') }}" class="inline">
                             @csrf

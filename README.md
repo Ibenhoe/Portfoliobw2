@@ -111,6 +111,9 @@ Tijdens het ontwikkelen van dit project heb ik gebruik gemaakt van de volgende b
     *   Er zijn verschillende antwoorden en snippets gebruikt voor styling, en php syntax problemen.
 *  **Course Resources**
    *  Ik heb de technieken uit de les gebruikt, om te zien hoe de verschillende onderdelen werken, en hoe ik deze in mijn eigen project kon gebruiken.
+   https://chatgpt.com/share/678a3f4c-3d8c-8007-b7fa-b61d6c46a736
+   De rest van de chatgpt links kan ik hier niet in plaatsen door het niet ondersteunen van afbeeldingen bij het delen van de chats.
+
 
 ## Belangrijke Informatie
 
